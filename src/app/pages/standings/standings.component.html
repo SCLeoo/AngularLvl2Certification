@@ -1,0 +1,41 @@
+<header>
+  <ul>
+    <li
+      *ngFor="let league of leagues"
+      [routerLink]="'/standings/' + league.id"
+      [routerLinkActive]="'active'"
+      (click)="onLeagueClick(league.id)"
+    >
+      {{ league.country }}
+    </li>
+  </ul>
+</header>
+
+<table>
+  <thead>
+    <tr>
+      <th></th>
+      <!-- <th></th> -->
+      <th>Name</th>
+      <th>Games</th>
+      <th>W</th>
+      <th>L</th>
+      <th>D</th>
+      <th>Goal Difference</th>
+      <th>Points</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let standing of standings">
+      <td>{{ standing.rank }}</td>
+      <!-- <td><img [src]="standing.team.logo" alt="" /></td> -->
+      <td>{{ standing.team.name }}</td>
+      <td>{{ standing.all.played }}</td>
+      <td>{{ standing.all.win }}</td>
+      <td>{{ standing.all.lose }}</td>
+      <td>{{ standing.all.draw }}</td>
+      <td>{{ standing.goalsDiff }}</td>
+      <td>{{ standing.points }}</td>
+    </tr>
+  </tbody>
+</table>
