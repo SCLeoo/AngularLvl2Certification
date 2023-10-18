@@ -15,7 +15,7 @@
   <thead>
     <tr>
       <th></th>
-      <!-- <th></th> -->
+      <th></th>
       <th>Name</th>
       <th>Games</th>
       <th>W</th>
@@ -26,9 +26,12 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let standing of standings">
+    <tr
+      *ngFor="let standing of standings"
+      [routerLink]="'/teams/' + standing.team.id"
+    >
       <td>{{ standing.rank }}</td>
-      <!-- <td><img [src]="standing.team.logo" alt="" /></td> -->
+      <td><img [src]="standing.team.logo" alt="" /></td>
       <td>{{ standing.team.name }}</td>
       <td>{{ standing.all.played }}</td>
       <td>{{ standing.all.win }}</td>

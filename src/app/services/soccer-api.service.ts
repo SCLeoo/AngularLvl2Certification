@@ -11,13 +11,25 @@ export class SoccerAPIService {
   currYear = new Date().getFullYear();
   currLeague = {} as League;
   league$ = new Subject<League>();
+  teamID = '';
+  currFixtures = [] as Fixture[];
+  fixtures$ = new Subject<Fixture[]>();
   useLocalStorage = true; //TODO: change to false on prod
 
   constructor(private http: HttpClient, private router: Router) {
     console.log(this.currYear);
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
-        this.updateLeague(location.pathname.split('/').pop() ?? '39');
+        const pathArr = location.pathname.split('/');
+        const id = pathArr[pathArr.length - 1];
+        const section = pathArr[1];
+        if (section == 'teams') {
+          this.updateTeam(id);
+        } else if (section == 'standings') {
+          this.updateLeague(id ?? '39');
+        } else if (id != 'error') {
+          router.navigate(['/standings/39']);
+        }
       }
     });
   }
@@ -60,6 +72,46 @@ export class SoccerAPIService {
       this.league$.next(this.currLeague);
     }
   }
+
+  updateTeam(newTeamID: string) {
+    if (this.teamID != newTeamID || !this.currFixtures) {
+      this.teamID = newTeamID;
+      this.fetchTeam();
+    }
+  }
+
+  fetchTeam() {
+    console.log('Fetching ' + this.teamID);
+    if (this.useLocalStorage) {
+      this.currFixtures =
+        (JSON.parse(
+          localStorage.getItem('team' + this.teamID) ?? '{}'
+        ) as Fixture[]) ?? ([] as Fixture[]);
+    }
+    //console.log(this.currFixtures);
+    if (!this.useLocalStorage || !this.currFixtures[0]) {
+      const params = new HttpParams()
+        .set('season', this.currYear)
+        .set('team', this.teamID);
+      this.http
+        .get('https://v3.football.api-sports.io/fixtures', { params })
+        .subscribe((res: Response) => {
+          if (res.errors!.bug || res.message || !res.response![0]) {
+            this.router.navigate(['/error']);
+          } else {
+            this.currFixtures = res.response as Fixture[];
+            localStorage.setItem(
+              'team' + this.teamID,
+              JSON.stringify(this.currFixtures)
+            );
+
+            this.fixtures$.next(this.currFixtures);
+          }
+        });
+    } else {
+      this.fixtures$.next(this.currFixtures);
+    }
+  }
 }
 
 export interface Response {
@@ -69,17 +121,24 @@ export interface Response {
     report: string;
   };
   message?: string;
-  response?: [{ league: League }];
+  response?: [Fixture];
+}
+
+export interface Fixture {
+  teams?: { home: Team; away: Team };
+  goals?: { home: number; away: number };
+  league?: League;
+  fixture?: { status?: { short?: string } };
 }
 
 export interface League {
   id: number;
   name: string;
   country: string;
-  logo?: string;
-  flag?: string;
+  logo: string;
+  flag: string;
   season: number;
-  standings: [Standings[]];
+  standings?: [Standings[]];
 }
 
 export interface Standings {
@@ -107,4 +166,5 @@ export interface Team {
   id: number;
   name: string;
   logo: string;
+  winner?: boolean;
 }

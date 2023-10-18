@@ -6,11 +6,16 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ErrorComponent } from './pages/error/error.component';
 import { StandingsComponent } from './pages/standings/standings.component';
+import { TeamsComponent } from './pages/teams/teams.component';
 import { TokenInterceptor } from './services/token.interceptor';
-import { TeamsComponent } from './teams/teams.component';
 
 @NgModule({
-  declarations: [AppComponent, StandingsComponent, ErrorComponent, TeamsComponent],
+  declarations: [
+    AppComponent,
+    StandingsComponent,
+    ErrorComponent,
+    TeamsComponent,
+  ],
   imports: [AppRoutingModule, BrowserModule, HttpClientModule],
   providers: [
     {

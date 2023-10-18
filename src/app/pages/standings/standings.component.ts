@@ -22,9 +22,10 @@ export class StandingsComponent {
   constructor(private soccerAPI: SoccerAPIService) {}
 
   ngOnInit() {
-    this.standings = this.soccerAPI.currLeague.standings[0];
+    if (this.soccerAPI.currLeague.standings)
+      this.standings = this.soccerAPI.currLeague.standings[0];
     this.soccerAPI.league$.subscribe((res) => {
-      this.standings = res.standings[0];
+      this.standings = res.standings![0];
     });
   }
 
