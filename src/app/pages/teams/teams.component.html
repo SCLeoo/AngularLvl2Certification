@@ -1,0 +1,17 @@
+<!-- <h3>Showing last 10 games of {{ teamName }}</h3> -->
+<ng-container *ngIf="teamFixtures">
+  <table class="table table-striped text-center">
+    <tbody>
+      <tr *ngFor="let fixture of teamFixtures">
+        <td><img [src]="fixture.teams!.home.logo" alt="" /></td>
+        <td>{{ fixture.teams!.home.name }}</td>
+        <td>{{ fixture.goals!.home }}</td>
+        <td>-</td>
+        <td>{{ fixture.goals!.away }}</td>
+        <td>{{ fixture.teams!.away.name }}</td>
+        <td><img [src]="fixture.teams!.away.logo" alt="" /></td>
+      </tr>
+    </tbody>
+  </table>
+  <a href="javascript:history.back()" class="btn btn-primary">Go back</a>
+</ng-container>
