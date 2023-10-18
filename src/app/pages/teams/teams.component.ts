@@ -18,6 +18,7 @@ export class TeamsComponent {
     this.soccerAPI.fixtures$.subscribe((res) => {
       this.fixtures = res;
     });
+    this.teamName = this.soccerAPI.getTeamName();
   }
   getLast10(): Fixture[] {
     let last10 = [];

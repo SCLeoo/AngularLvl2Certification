@@ -1,5 +1,6 @@
 <!-- {{ fixtures.slice(0, 10) | json }} -->
-<table>
+<h3>Showing last 10 games of {{ teamName }}</h3>
+<table class="table table-striped text-center">
   <tbody>
     <tr *ngFor="let fixture of getLast10()">
       <td><img [src]="fixture.teams!.home.logo" alt="" /></td>
@@ -12,4 +13,4 @@
     </tr>
   </tbody>
 </table>
-<a href="javascript:history.back()">Go back</a>
+<a href="javascript:history.back()" class="btn btn-primary">Go back</a>

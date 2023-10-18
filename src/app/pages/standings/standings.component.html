@@ -1,9 +1,10 @@
 <header>
-  <ul>
+  <ul class="pagination pagination-lg justify-content-center">
     <li
+      class="page-link"
       *ngFor="let league of leagues"
       [routerLink]="'/standings/' + league.id"
-      [routerLinkActive]="'active'"
+      routerLinkActive="active"
       (click)="onLeagueClick(league.id)"
     >
       {{ league.country }}
@@ -11,7 +12,7 @@
   </ul>
 </header>
 
-<table>
+<table class="table table-striped table-hover text-center">
   <thead>
     <tr>
       <th></th>

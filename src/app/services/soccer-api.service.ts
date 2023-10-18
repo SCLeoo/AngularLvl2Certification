@@ -12,6 +12,7 @@ export class SoccerAPIService {
   currLeague = {} as League;
   league$ = new Subject<League>();
   teamID = '';
+  teamName = '';
   currFixtures = [] as Fixture[];
   fixtures$ = new Subject<Fixture[]>();
   useLocalStorage = true; //TODO: change to false on prod
@@ -76,8 +77,16 @@ export class SoccerAPIService {
   updateTeam(newTeamID: string) {
     if (this.teamID != newTeamID || !this.currFixtures) {
       this.teamID = newTeamID;
+      if (this.currLeague.standings)
+        this.teamName =
+          this.currLeague.standings![0]?.find(
+            (standing) => standing.team.id.toString() == this.teamID
+          )?.team.name ?? '';
       this.fetchTeam();
     }
+  }
+  getTeamName() {
+    return this.teamName;
   }
 
   fetchTeam() {
@@ -100,6 +109,10 @@ export class SoccerAPIService {
             this.router.navigate(['/error']);
           } else {
             this.currFixtures = res.response as Fixture[];
+            this.teamName =
+              res.response![0].teams?.away.id.toString() == this.teamID
+                ? res.response![0].teams?.away.name
+                : res.response![0].teams?.home.name ?? '';
             localStorage.setItem(
               'team' + this.teamID,
               JSON.stringify(this.currFixtures)
@@ -109,6 +122,10 @@ export class SoccerAPIService {
           }
         });
     } else {
+      this.teamName =
+        this.currFixtures[0].teams?.away.id.toString() == this.teamID
+          ? this.currFixtures[0].teams?.away.name
+          : this.currFixtures[0].teams?.home.name ?? '';
       this.fixtures$.next(this.currFixtures);
     }
   }
